@@ -1,0 +1,12 @@
+# Used inside the native classpath:/config
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/enterpriseshop
+    username: shop_user
+    password: shop_password
+  kafka:
+    bootstrap-servers: localhost:9092
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG

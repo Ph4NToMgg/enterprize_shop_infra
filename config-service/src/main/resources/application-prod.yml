@@ -1,0 +1,12 @@
+# Used inside the native classpath:/config for PROD environment
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-primary.internal:5432/enterpriseshop
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  kafka:
+    bootstrap-servers: kafka-cluster.internal:9092
+logging:
+  level:
+    root: WARN
+    com.example: INFO

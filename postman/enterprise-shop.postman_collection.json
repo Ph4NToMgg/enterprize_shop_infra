@@ -1,0 +1,201 @@
+{
+    "info": {
+        "name": "Enterprise Shop API",
+        "description": "Postman collection for enterprise-shop microservices",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "auth_url",
+            "value": "http://localhost:8081"
+        },
+        {
+            "key": "product_url",
+            "value": "http://localhost:8082"
+        },
+        {
+            "key": "inventory_url",
+            "value": "http://localhost:8083"
+        },
+        {
+            "key": "order_url",
+            "value": "http://localhost:8084"
+        },
+        {
+            "key": "access_token",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Signup",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{auth_url}}/api/auth/signup",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\":\"testuser\",\"email\":\"test@example.com\",\"password\":\"Password123!\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{auth_url}}/api/auth/login",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\":\"test@example.com\",\"password\":\"Password123!\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{auth_url}}/api/auth/refresh",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"refreshToken\":\"<paste-refresh-token>\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get Me",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{auth_url}}/api/auth/me",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "item": [
+                {
+                    "name": "Create Product",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{product_url}}/api/products",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"sku\":\"LAPTOP-001\",\"name\":\"MacBook Pro\",\"description\":\"16 inch\",\"price\":2499.99,\"category\":\"electronics\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Products",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{product_url}}/api/products"
+                    }
+                },
+                {
+                    "name": "Search Products",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{product_url}}/api/products/search?name=mac&page=0&size=20"
+                    }
+                },
+                {
+                    "name": "Get Product by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{product_url}}/api/products/<id>"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Inventory",
+            "item": [
+                {
+                    "name": "Get Inventory by SKU",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{inventory_url}}/api/inventory?sku=LAPTOP-001"
+                    }
+                },
+                {
+                    "name": "Reserve Stock",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{inventory_url}}/api/inventory/reserve",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"sku\":\"LAPTOP-001\",\"quantity\":1,\"correlationId\":\"test-123\"}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Orders",
+            "item": [
+                {
+                    "name": "Create Order",
+                    "request": {
+                        "method": "POST",
+                        "url": "{{order_url}}/api/orders",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"userEmail\":\"test@example.com\",\"items\":[{\"sku\":\"LAPTOP-001\",\"quantity\":1,\"unitPrice\":2499.99}]}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get Order by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": "{{order_url}}/api/orders/<id>"
+                    }
+                }
+            ]
+        }
+    ]
+}

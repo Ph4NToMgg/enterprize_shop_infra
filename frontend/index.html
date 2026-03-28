@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Shop — Microservices Dashboard</title>
+    <meta name="description"
+        content="Enterprise Shop Microservices Management Dashboard — Monitor, manage products, inventory, and orders.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     AUTH PAGE
+     ═══════════════════════════════════════════════════════════ -->
+    <div id="auth-page" class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="auth-logo-icon">🏪</div>
+                    <h1>Enterprise Shop</h1>
+                    <p>Microservices Management Platform</p>
+                </div>
+
+                <div class="auth-tabs" id="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Sign In</button>
+                    <button class="auth-tab" data-tab="register">Sign Up</button>
+                </div>
+
+                <div id="auth-alert"></div>
+
+                <!-- Login Form -->
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter your username" required
+                            autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required
+                            autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="login-btn">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" style="display:none;">
+                    <div class="form-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username" required
+                            autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" placeholder="Enter your email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" placeholder="Create a password" required
+                            autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="register-btn">
+                        <span>Create Account</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     APP SHELL
+     ═══════════════════════════════════════════════════════════ -->
+    <div id="app-shell" class="app-shell">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">🏪</div>
+                <h2>Enterprise Shop</h2>
+            </div>
+
+            <div class="sidebar-nav">
+                <button class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </button>
+                <button class="nav-item" data-page="products">
+                    <span class="nav-icon">📦</span> Products
+                </button>
+                <button class="nav-item" data-page="inventory">
+                    <span class="nav-icon">🏭</span> Inventory
+                </button>
+                <button class="nav-item" data-page="orders">
+                    <span class="nav-icon">🛒</span> Orders
+                </button>
+                <button class="nav-item" data-page="users">
+                    <span class="nav-icon">👥</span> Users
+                </button>
+                <div class="nav-separator"></div>
+                <button class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙️</span> Settings
+                </button>
+            </div>
+
+            <div class="sidebar-user" id="sidebar-user">
+                <div class="sidebar-user-avatar" id="user-avatar">U</div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="user-display-name">User</div>
+                    <div class="sidebar-user-role" id="user-display-role">USER</div>
+                </div>
+                <button class="btn-icon" id="logout-btn" title="Sign out">🚪</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- ── Dashboard ──────────────────────────────────── -->
+            <div id="page-dashboard" class="page active">
+                <div class="page-header">
+                    <div>
+                        <h2>Dashboard</h2>
+                        <p>Microservices health & overview</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="refresh-health-btn">🔄 Refresh</button>
+                </div>
+
+                <div class="health-grid" id="health-grid">
+                    <div class="health-item">
+                        <div class="health-dot loading"></div>
+                        <div>
+                            <div class="health-item-name">Auth Service</div>
+                            <div class="health-item-status">Checking…</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-dot loading"></div>
+                        <div>
+                            <div class="health-item-name">Product Service</div>
+                            <div class="health-item-status">Checking…</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-dot loading"></div>
+                        <div>
+                            <div class="health-item-name">Inventory Service</div>
+                            <div class="health-item-status">Checking…</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-dot loading"></div>
+                        <div>
+                            <div class="health-item-name">Order Service</div>
+                            <div class="health-item-status">Checking…</div>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <div class="health-dot loading"></div>
+                        <div>
+                            <div class="health-item-name">Notification Service</div>
+                            <div class="health-item-status">Checking…</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-icon purple">📦</div>
+                        <div class="stat-card-value" id="stat-products">—</div>
+                        <div class="stat-card-label">Products</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon green">🏭</div>
+                        <div class="stat-card-value" id="stat-inventory">—</div>
+                        <div class="stat-card-label">Inventory Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon amber">🛒</div>
+                        <div class="stat-card-value" id="stat-services">—</div>
+                        <div class="stat-card-label">Services Online</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon rose">👥</div>
+                        <div class="stat-card-value" id="stat-users">—</div>
+                        <div class="stat-card-label">Registered Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon cyan">⚡</div>
+                        <div class="stat-card-value" id="stat-uptime">—</div>
+                        <div class="stat-card-label">Services Online</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Products ───────────────────────────────────── -->
+            <div id="page-products" class="page">
+                <div class="page-header">
+                    <div>
+                        <h2>Products</h2>
+                        <p>Manage your product catalog</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="add-product-btn">➕ Add Product</button>
+                </div>
+                <div id="products-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <h3>Loading products…</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Inventory ──────────────────────────────────── -->
+            <div id="page-inventory" class="page">
+                <div class="page-header">
+                    <div>
+                        <h2>Inventory</h2>
+                        <p>Stock levels & reservations</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="refresh-inventory-btn">🔄 Refresh</button>
+                </div>
+                <div id="inventory-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏭</div>
+                        <h3>Loading inventory…</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Orders ─────────────────────────────────────── -->
+            <div id="page-orders" class="page">
+                <div class="page-header">
+                    <div>
+                        <h2>Orders</h2>
+                        <p>Order management</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="create-order-btn">➕ New Order</button>
+                </div>
+                <div id="orders-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛒</div>
+                        <h3>No orders yet</h3>
+                        <p>Create your first order to get started</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Users ───────────────────────────────────────── -->
+            <div id="page-users" class="page">
+                <div class="page-header">
+                    <div>
+                        <h2>Users</h2>
+                        <p>Registered users management</p>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="refresh-users-btn">🔄 Refresh</button>
+                </div>
+                <div id="users-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <h3>Loading users…</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Settings ───────────────────────────────────── -->
+            <div id="page-settings" class="page">
+                <div class="page-header">
+                    <div>
+                        <h2>Settings</h2>
+                        <p>Service endpoints configuration</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Service URLs</h3>
+                    </div>
+                    <div class="card-body" id="settings-form"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal container -->
+    <div id="modal-container"></div>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

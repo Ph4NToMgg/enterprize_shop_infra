@@ -1,0 +1,6 @@
+com\example\notificationservice\controller\NotificationController.class
+com\example\notificationservice\dto\NotificationEvent$NotificationEventBuilder.class
+com\example\notificationservice\dto\NotificationEvent.class
+com\example\notificationservice\service\EmailService.class
+com\example\notificationservice\NotificationServiceApplication.class
+com\example\notificationservice\service\NotificationConsumer.class

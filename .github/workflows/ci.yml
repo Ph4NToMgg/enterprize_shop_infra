@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [auth-service, product-service, inventory-service, order-service, notification-service]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build & Test ${{ matrix.service }}
+        run: mvn -f ${{ matrix.service }}/pom.xml clean verify -B
+
+      # Placeholder for static analysis (e.g., SpotBugs, PMD)
+      # - name: Static Analysis
+      #   run: mvn -f ${{ matrix.service }}/pom.xml spotbugs:check -B
