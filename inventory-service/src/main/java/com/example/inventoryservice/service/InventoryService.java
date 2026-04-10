@@ -10,4 +10,5 @@ public interface InventoryService {
     List<InventoryDto> getAll();
     ReservationResponse reserve(ReservationRequest request);
     void releaseStock(String sku, int quantity);
+    void addStock(String sku, int quantity);
 }

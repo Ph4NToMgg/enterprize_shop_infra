@@ -28,4 +28,9 @@ public class OrderController {
     public ResponseEntity<OrderSummary> getOrder(@PathVariable UUID id) {
         return ResponseEntity.ok(orderService.getOrder(id));
     }
+
+    @GetMapping
+    public ResponseEntity<java.util.List<OrderSummary>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
 }

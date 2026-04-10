@@ -163,7 +163,7 @@
         else if (page === 'products') loadProducts();
         else if (page === 'inventory') loadInventory();
         else if (page === 'users') loadUsers();
-        else if (page === 'orders') { /* static for now */ }
+        else if (page === 'orders') loadOrders();
         else if (page === 'settings') loadSettings();
     }
 
@@ -315,7 +315,10 @@
             if (!dto.name || !dto.sku || isNaN(dto.price)) return showToast('Please fill in required fields', 'error');
             try {
                 if (isEdit) await API.updateProduct(product.id, dto);
-                else await API.createProduct(dto);
+                else {
+                    await API.createProduct(dto);
+                    await API.addInventory(dto.sku, 100);
+                }
                 closeModal();
                 showToast(isEdit ? 'Product updated!' : 'Product created!', 'success');
                 loadProducts();
@@ -450,14 +453,51 @@
             const price = parseFloat(document.getElementById('modal-order-price').value);
             if (!email || !sku || !qty || isNaN(price)) return showToast('Please fill in all fields', 'error');
             try {
-                const order = await API.createOrder(email, [{ sku, quantity: qty, price }]);
+                const order = await API.createOrder(email, [{ sku, quantity: qty, unitPrice: price }]);
                 closeModal();
-                showToast(`Order created! ID: ${order.id?.substring(0, 8) || 'OK'}`, 'success');
+                showToast(`Order created! ID: ${order.orderId || 'OK'}`, 'success');
+                loadOrders();
             } catch (err) {
                 showToast(err.message, 'error');
             }
         };
     });
+
+    async function loadOrders() {
+        const container = document.getElementById('orders-content');
+        container.innerHTML = '<div class="empty-state"><div class="spinner" style="margin:0 auto;width:32px;height:32px;border-width:3px;"></div><h3 style="margin-top:16px;">Loading…</h3></div>';
+
+        try {
+            const orders = await API.getAllOrders();
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🛒</div>
+                        <h3>No orders yet</h3>
+                        <p>Create your first order to get started</p>
+                    </div>`;
+                return;
+            }
+            container.innerHTML = `
+                <div class="card">
+                    <table class="data-table">
+                        <thead><tr>
+                            <th>ID</th><th>User</th><th>Status</th><th>Total</th>
+                        </tr></thead>
+                        <tbody>${orders.map(o => `
+                            <tr>
+                                <td style="font-family:monospace;font-size:12px;">${escapeHTML(o.orderId.substring(0, 8))}…</td>
+                                <td>${escapeHTML(o.userEmail)}</td>
+                                <td><span class="badge ${o.status === 'CONFIRMED' ? 'badge-success' : 'badge-warning'}">${escapeHTML(o.status)}</span></td>
+                                <td style="font-weight:bold;">$${Number(o.totalAmount).toFixed(2)}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+        } catch (err) {
+            container.innerHTML = `<div class="alert alert-error">Failed to load orders: ${err.message}</div>`;
+        }
+    }
 
     // ── Users ────────────────────────────────────────────────────
     async function loadUsers() {

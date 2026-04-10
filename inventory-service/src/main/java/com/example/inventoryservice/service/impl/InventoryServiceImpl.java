@@ -32,6 +32,8 @@ public class InventoryServiceImpl implements InventoryService {
         return InventoryDto.builder()
                 .sku(inv.getSku())
                 .available(inv.getAvailableQuantity() - inv.getReservedQuantity())
+                .availableQuantity(inv.getAvailableQuantity())
+                .reservedQuantity(inv.getReservedQuantity())
                 .build();
     }
 
@@ -42,6 +44,8 @@ public class InventoryServiceImpl implements InventoryService {
                 .map(inv -> InventoryDto.builder()
                         .sku(inv.getSku())
                         .available(inv.getAvailableQuantity() - inv.getReservedQuantity())
+                        .availableQuantity(inv.getAvailableQuantity())
+                        .reservedQuantity(inv.getReservedQuantity())
                         .build())
                 .toList();
     }
@@ -81,5 +85,18 @@ public class InventoryServiceImpl implements InventoryService {
                 .orElseThrow(() -> new RuntimeException("Inventory not found for SKU: " + sku));
         inv.setReservedQuantity(Math.max(0, inv.getReservedQuantity() - quantity));
         repository.save(inv);
+    }
+
+    @Override
+    public void addStock(String sku, int quantity) {
+        InventoryEntity inv = repository.findBySku(sku).orElseGet(() -> {
+            InventoryEntity newInv = new InventoryEntity();
+            newInv.setSku(sku);
+            newInv.setAvailableQuantity(0);
+            return newInv;
+        });
+        inv.setAvailableQuantity(inv.getAvailableQuantity() + quantity);
+        repository.save(inv);
+        log.info("Added {} units to sku={}", quantity, sku);
     }
 }

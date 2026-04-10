@@ -30,4 +30,10 @@ public class InventoryController {
         ReservationResponse response = inventoryService.reserve(request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<Void> addStock(@RequestParam String sku, @RequestParam int quantity) {
+        inventoryService.addStock(sku, quantity);
+        return ResponseEntity.ok().build();
+    }
 }

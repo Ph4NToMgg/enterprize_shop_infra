@@ -103,6 +103,13 @@ public class OrderService {
         return toSummary(order);
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderSummary> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::toSummary)
+                .toList();
+    }
+
     private OrderSummary toSummary(OrderEntity order) {
         return OrderSummary.builder()
                 .orderId(order.getId())

@@ -183,6 +183,12 @@ const API = (() => {
         });
     }
 
+    async function addInventory(sku, quantity) {
+        return request('inventory', `/api/inventory/add?sku=${encodeURIComponent(sku)}&quantity=${quantity}`, {
+            method: 'POST'
+        });
+    }
+
     // ── Orders ───────────────────────────────────────────────────────
     async function createOrder(userEmail, items) {
         return request('order', '/api/orders', {
@@ -193,6 +199,10 @@ const API = (() => {
 
     async function getOrder(id) {
         return request('order', `/api/orders/${id}`);
+    }
+
+    async function getAllOrders() {
+        return request('order', '/api/orders');
     }
 
     // ── Health checks ────────────────────────────────────────────────
@@ -219,8 +229,8 @@ const API = (() => {
     return {
         login, register, getMe, getAllUsers,
         getProducts, searchProducts, getProduct, createProduct, updateProduct, deleteProduct,
-        getInventory, reserveInventory,
-        createOrder, getOrder,
+        getInventory, reserveInventory, addInventory,
+        createOrder, getOrder, getAllOrders,
         checkHealth, checkAllHealth,
         setBaseUrl, getBaseUrl, getDefaults,
         setTokens, getAccessToken, isLoggedIn, clearTokens,
