@@ -96,9 +96,9 @@ class AuthIntegrationTest {
 
     @Test
     @Order(4)
-    void me_withoutToken_shouldReturn403() throws Exception {
+    void me_withoutToken_shouldReturn401() throws Exception {
         mockMvc.perform(get("/api/auth/me"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
